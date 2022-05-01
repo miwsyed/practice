@@ -11,13 +11,12 @@ const CandidateComponent = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const history = useHistory();
-  const candidates = useSelector((state) => state.ALL_CANDIDATES.test);
+  const candidates = useSelector((state) => state.ALL_CANDIDATES);
   console.log(candidates);
   const dispatch = useDispatch();
   const handleSubmit = () => {
-    const areCandidates = candidates.some((e) => e.id);
-
-    let nextID = candidates.length > 0 ? candidates.pop().id + 1 : 0;
+    let tempCandidate = JSON.parse(JSON.stringify(candidates));
+    let nextID = tempCandidate.length > 0 ? tempCandidate.pop().id + 1 : 0;
     let data = {
       name: name,
       age: age,

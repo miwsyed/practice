@@ -1,14 +1,11 @@
 import { ActionTypes } from "../constants/action-types";
 import { initialState } from "./InitialState";
-export const candidates = (state = { test: [] }, { type, payload }) => {
+export const candidates = (state = initialState, { type, payload }) => {
   switch (type) {
     case ActionTypes.SET_CANDIDATE: {
-      const newTest = [...state.test, payload];
-
-      return { ...state, test: newTest };
+      return [...state, payload];
     }
     default:
-      console.log("asdf");
       return state;
   }
 };
