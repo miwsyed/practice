@@ -3,7 +3,11 @@ import { initialState } from "./InitialState";
 export const candidates = (state = initialState, { type, payload }) => {
   switch (type) {
     case ActionTypes.SET_CANDIDATE: {
-      return [...state, payload];
+      return {
+        ...state,
+        ...state.candidates,
+        candidates: [...state.candidates, payload],
+      };
     }
     default:
       return state;

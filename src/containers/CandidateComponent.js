@@ -11,7 +11,7 @@ const CandidateComponent = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const history = useHistory();
-  const candidates = useSelector((state) => state.ALL_CANDIDATES);
+  const candidates = useSelector((state) => state.ALL_CANDIDATES.candidates);
   console.log(candidates);
   const dispatch = useDispatch();
   const handleSubmit = () => {
