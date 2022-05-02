@@ -1,39 +1,37 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { ActionTypes } from "../redux/constants/action-types";
-import { useHistory } from "react-router-dom";
-import { useEffect } from "react";
-
+import { setCandidate } from "../redux/actions/candidateActions";
 const CandidateComponent = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const history = useHistory();
+  const UseStore = useSelector((state) => state.ALL_CANDIDATES);
   const candidates = useSelector((state) => state.ALL_CANDIDATES.candidates);
-  console.log(candidates);
   const dispatch = useDispatch();
+  const allCandidates = JSON.parse(JSON.stringify(UseStore.candidates));
+  const navigate = useNavigate();
+
   const handleSubmit = () => {
-    let tempCandidate = JSON.parse(JSON.stringify(candidates));
-    let nextID = tempCandidate.length > 0 ? tempCandidate.pop().id + 1 : 0;
+    let nextID = allCandidates.length > 0 ? allCandidates.pop().id + 1 : 0;
     let data = {
       name: name,
       age: age,
       id: nextID,
     };
-    dispatch({ type: ActionTypes.SET_CANDIDATE, payload: data });
+    dispatch(setCandidate(data));
   };
-  useEffect(() => {
-    console.log(candidates);
-  }, [candidates]);
 
   const renderList = candidates?.map((candidate) => {
     const { id, name, age } = candidate;
     return (
       <div className="" style={{ width: "40%" }} key={id}>
-        <Link to={`/product/${id}`}>
-          <div className="ui link cards">
+        <>
+          <div
+            onClick={() => navigate(`/candidate/${id}`)}
+            className="ui link cards"
+          >
             <div className="card">
               <div className="content">
                 <div className="header">{name}</div>
@@ -42,7 +40,7 @@ const CandidateComponent = () => {
               </div>
             </div>
           </div>
-        </Link>
+        </>
       </div>
     );
   });

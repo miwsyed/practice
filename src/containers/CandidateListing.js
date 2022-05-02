@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getAgeState } from "../containers/HelperFuncitons";
+import { useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
 const CandidateListing = () => {
-  // const [age, setAge] = useState("");
-  // const [stage, setStage] = useState("");
+  const [candidates, setCandidates] = useState({});
+  const [ageState, setAgeState] = useState("");
+  const params = useParams();
+  const navigate = useNavigate();
+  const candidateID = params.id;
+  const store = useSelector((state) => state.ALL_CANDIDATES);
 
-  // useEffect(() => {
-  //   setAge(state.find((e) => e.age).age);
-  //   /* eslint-disable */
-  // }, []);
+  const getCandidateDetails = (candidateID) => {
+    const allCandidates = store.candidates;
+    setCandidates(allCandidates);
+    const candidate = allCandidates.find((e) => e.id == candidateID);
+    const callgetState = (candidate) => getAgeState(candidate);
+    setAgeState(callgetState(candidate));
+  };
+  useEffect(() => {
+    getCandidateDetails(candidateID);
 
-  // const CallGetStage = () => getStage(age);
+    /*eslint-disable */
+  }, [candidateID]);
 
-  // useEffect(() => {
-  //   setStage(CallGetStage());
-  // }, [age]);
   return (
     <>
       <div
@@ -25,7 +35,7 @@ const CandidateListing = () => {
           transform: "translate(-50%,-50%)",
         }}
       >
-        You are a
+        You are {ageState}
       </div>
     </>
   );

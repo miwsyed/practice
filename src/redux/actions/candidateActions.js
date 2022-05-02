@@ -1,15 +1,8 @@
 import { ActionTypes } from "../constants/action-types";
 
-export const setAge = (age) => {
+export const setCandidate = (data) => {
   return {
-    type: ActionTypes.SET_AGE,
-    payload: age,
-  };
-};
-
-export const resetAge = (age) => {
-  return {
-    type: ActionTypes.RESET_AGE,
-    payload: age,
+    type: ActionTypes.SET_CANDIDATE,
+    payload: data,
   };
 };
