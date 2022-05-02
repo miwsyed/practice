@@ -22,6 +22,23 @@ const CandidateComponent = () => {
     };
     dispatch(setCandidate(data));
   };
+  const handleChangeName = (e) => {
+    const regex = /^([a-zA-Z]+)$/;
+    if (regex.test(e.target.value)) {
+      setName(e.target.value);
+    } else {
+      alert("You have a number,special character in your name???");
+    }
+  };
+
+  const handleChangeAge = (e) => {
+    const regex = /^([\d]+)$/;
+    if (regex.test(e.target.value)) {
+      setAge(e.target.value);
+    } else {
+      alert("You have a text,special character in your age??");
+    }
+  };
 
   const renderList = candidates?.map((candidate) => {
     const { id, name, age } = candidate;
@@ -34,9 +51,8 @@ const CandidateComponent = () => {
           >
             <div className="card">
               <div className="content">
-                <div className="header">{name}</div>
+                <div className="header">Name : {name}</div>
                 <div className="meta price">Age : {age}</div>
-                <div className="meta">{id}</div>
               </div>
             </div>
           </div>
@@ -60,14 +76,14 @@ const CandidateComponent = () => {
           type="text"
           style={{ marginInline: "2em" }}
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={handleChangeName}
         />
         <input
           placeholder="age"
           type="text"
           value={age}
           style={{ marginRight: "2em" }}
-          onChange={(e) => setAge(e.target.value)}
+          onChange={handleChangeAge}
         />
         <button onClick={handleSubmit} style={{ padding: "2px 5px" }}>
           Submit
