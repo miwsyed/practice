@@ -6,3 +6,17 @@ export const setCandidate = (data) => {
     payload: data,
   };
 };
+
+export const deleteCandidate = (id) => {
+  return {
+    type: ActionTypes.DELETE_CANDIDATE,
+    payload: id,
+  };
+};
+export const updateCandidate = (data) => {
+  console.log(data);
+  return {
+    type: ActionTypes.EDIT_CANDIDATE,
+    payload: data,
+  };
+};

@@ -6,3 +6,7 @@ export const getAgeState = (candidateDetails) => {
   else if (age > 12 && age <= 19) return "a Teenager";
   else if (age > 20) return "an Adult";
 };
+
+export const isDirty = (name, age) => {
+  return name.length > 0 ? (age > 0 ? false : true) : true;
+};

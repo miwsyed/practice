@@ -1,29 +1,56 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setCandidate } from "../redux/actions/candidateActions";
+import {
+  setCandidate,
+  deleteCandidate,
+  updateCandidate,
+} from "../redux/actions/candidateActions";
+import { isDirty } from "./HelperFuncitons";
 const CandidateComponent = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
+  const [editClicked, setEditClicked] = useState(false);
+  const [submitValue, setSubmitValue] = useState("Submit");
+  const [derivedCandidateDetails, setderivedCandidateDetails] = useState({});
+
   const UseStore = useSelector((state) => state.ALL_CANDIDATES);
   const candidates = useSelector((state) => state.ALL_CANDIDATES.candidates);
-  const dispatch = useDispatch();
   const allCandidates = JSON.parse(JSON.stringify(UseStore.candidates));
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    let nextID = allCandidates.length > 0 ? allCandidates.pop().id + 1 : 0;
-    let data = {
-      name: name,
-      age: age,
-      id: nextID,
-    };
-    dispatch(setCandidate(data));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (submitValue === "Submit") {
+      console.log("I got shot in submit ");
+      let nextID = allCandidates.length > 0 ? allCandidates.pop().id + 1 : 0;
+      let data = {
+        name: name,
+        age: age,
+        id: nextID,
+      };
+      console.log(data);
+      dispatch(setCandidate(data));
+    } else if (submitValue === "Update") {
+      console.log("I got shot in update ");
+
+      let data = {
+        name: name,
+        age: age,
+        id: derivedCandidateDetails.id,
+      };
+      dispatch(updateCandidate(data));
+    }
+
+    setName("");
+    setAge("");
   };
   const handleChangeName = (e) => {
-    const regex = /^([a-zA-Z]+)$/;
+    const regex = /^([a-zA-Z\s?]+)$/;
     if (regex.test(e.target.value)) {
       setName(e.target.value);
     } else {
@@ -40,19 +67,64 @@ const CandidateComponent = () => {
     }
   };
 
+  const handleDelete = (id) => {
+    dispatch(deleteCandidate(id));
+  };
+
+  const handleEdit = (id) => {
+    setEditClicked(true);
+    setSubmitValue("Update");
+    const getCandidateDetails = allCandidates.find((e) => e.id === id);
+    setderivedCandidateDetails(getCandidateDetails);
+    setName(getCandidateDetails.name);
+    setAge(Number(getCandidateDetails.age));
+  };
+
+  const callIsDirty = () => isDirty(name, age);
+
+  //Update the localstorage with current subscription
+  useEffect(() => {
+    localStorage.setItem("candidates", JSON.stringify(candidates));
+    setAge("");
+    setName("");
+    setSubmitValue("Submit");
+  }, [candidates]);
+
   const renderList = candidates?.map((candidate) => {
     const { id, name, age } = candidate;
     return (
       <div className="container bg-blue " style={{ width: "40%" }} key={id}>
         <>
-          <div
-            onClick={() => navigate(`/candidate/${id}`)}
-            className="ui link cards"
-          >
+          <div className="p-3">
             <div className="card">
-              <div className="content">
+              <div className="content p-3">
                 <div className="header">Name : {name}</div>
-                <div className="meta price">Age : {age}</div>
+                <div className="">Age : {age}</div>
+
+                <div className="mt-3">
+                  <button
+                    style={{ float: "left", padding: "1px 4px" }}
+                    onClick={() => navigate(`/candidate/${id}`)}
+                  >
+                    View
+                  </button>
+                  <button
+                    style={{
+                      float: "left",
+                      padding: "1px 4px",
+                      marginInline: "5px",
+                    }}
+                    onClick={() => handleEdit(id)}
+                  >
+                    Edit
+                  </button>
+                  <img
+                    onClick={() => handleDelete(id)}
+                    alt="delete"
+                    style={{ width: "20px", float: "right", cursor: "pointer" }}
+                    src="https://cdn-icons-png.flaticon.com/512/2891/2891491.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -71,23 +143,30 @@ const CandidateComponent = () => {
           alignItems: "center",
         }}
       >
-        <input
-          placeholder="name"
-          type="text"
-          style={{ marginInline: "2em" }}
-          value={name}
-          onChange={handleChangeName}
-        />
-        <input
-          placeholder="age"
-          type="text"
-          value={age}
-          style={{ marginRight: "2em" }}
-          onChange={handleChangeAge}
-        />
-        <button onClick={handleSubmit} style={{ padding: "2px 5px" }}>
-          Submit
-        </button>
+        <form onSubmit={handleSubmit}>
+          <input
+            placeholder="name"
+            type="text"
+            style={{ marginInline: "2em", padding: "2px 3px" }}
+            value={name}
+            onChange={handleChangeName}
+          />
+          <input
+            id="age"
+            placeholder="age"
+            type="text"
+            value={age}
+            style={{ marginInline: "2em", padding: "2px 3px" }}
+            onChange={handleChangeAge}
+          />
+          <button
+            type="submit"
+            disabled={callIsDirty()}
+            style={{ padding: "2px 3px" }}
+          >
+            {submitValue}
+          </button>
+        </form>
       </div>
       {candidates && renderList}
       <style>{`
