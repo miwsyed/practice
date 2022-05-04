@@ -43,7 +43,7 @@ const CandidateComponent = () => {
   const renderList = candidates?.map((candidate) => {
     const { id, name, age } = candidate;
     return (
-      <div className="" style={{ width: "40%" }} key={id}>
+      <div className="container bg-blue " style={{ width: "40%" }} key={id}>
         <>
           <div
             onClick={() => navigate(`/candidate/${id}`)}

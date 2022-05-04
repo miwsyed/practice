@@ -16,7 +16,6 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/candidate/:id" element={<CandidateListing />} />
           </Route>
-
           <Route path="*" element={"ERROR 404 NOT FOUND"} />
         </Routes>
       </Router>

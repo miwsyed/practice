@@ -4,16 +4,13 @@ import { getAgeState } from "../containers/HelperFuncitons";
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
 const CandidateListing = () => {
-  const [candidates, setCandidates] = useState({});
   const [ageState, setAgeState] = useState("");
   const params = useParams();
-  const navigate = useNavigate();
   const candidateID = params.id;
   const store = useSelector((state) => state.ALL_CANDIDATES);
 
   const getCandidateDetails = (candidateID) => {
     const allCandidates = store.candidates;
-    setCandidates(allCandidates);
     const candidate = allCandidates.find((e) => e.id == candidateID);
     const callgetState = (candidate) => getAgeState(candidate);
     setAgeState(callgetState(candidate));
@@ -29,6 +26,8 @@ const CandidateListing = () => {
       <div
         className="display"
         style={{
+          margin: "auto",
+          backgroundColor: "aqua",
           position: "absolute",
           top: "50%",
           left: "50%",
