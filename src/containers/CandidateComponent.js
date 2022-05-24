@@ -37,7 +37,7 @@ const CandidateComponent = () => {
       dispatch(setCandidate(data));
     } else if (submitValue === "Update") {
       console.log("I got shot in update ");
-
+      //comment
       let data = {
         name: name,
         age: age,
